@@ -1,0 +1,16 @@
+{
+	"name": "first-project",
+	"version": "1.0.0",
+	"description": "Creating the first node.js project",
+	"main": "index.js",
+	"scripts": {
+		"dev": "node index.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [
+		"node",
+		"npm"
+	],
+	"author": "OmkarArora",
+	"license": "ISC"
+}
