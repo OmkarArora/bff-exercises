@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function SSRHome({ posts }) {
 	return (
 		<div>
-			<h1>CSR Blog App</h1>
+			<h1>SSR Blog App</h1>
 			<p>Welcome Home!</p>
 			{posts.map((item, index) => (
 				<div key={item.id}>
