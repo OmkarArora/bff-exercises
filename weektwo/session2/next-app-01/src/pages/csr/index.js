@@ -4,7 +4,7 @@ const CSRHome = () => {
 	const [posts, setPosts] = useState([]);
 
 	useEffect(() => {
-		fetch("http://localhost:3000/posts")
+		fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/posts`)
 			.then((res) => res.json())
 			.then((data) => {
 				setPosts(data);

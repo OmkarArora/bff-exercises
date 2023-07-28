@@ -11,7 +11,7 @@ export default function Post() {
 
 	useEffect(() => {
 		if (id) {
-			fetch(`http://localhost:3000/posts/${id}`)
+			fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/posts/${id}`)
 				.then((res) => res.json())
 				.then((data) => {
 					setPost(data);
@@ -20,7 +20,7 @@ export default function Post() {
 					console.error(error);
 				});
 
-			fetch(`http://localhost:3000/comments?postId=${id}`)
+			fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/comments?postId=${id}`)
 				.then((res) => res.json())
 				.then((data) => {
 					setComments(data);

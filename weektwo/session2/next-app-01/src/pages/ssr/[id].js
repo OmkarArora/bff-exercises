@@ -27,14 +27,17 @@ export default function Post({ post, comments }) {
 }
 
 export async function getServerSideProps(context) {
+	console.log("URL----", context.req.headers.host);
 	const { id } = context.query;
 
-	const postResponse = await fetch(`http://localhost:3000/posts/${id}`);
+	const postResponse = await fetch(
+		`${process.env.NEXT_PUBLIC_SITE_URL}/posts/${id}`
+	);
 
 	const post = await postResponse.json();
 
 	const commentsResponse = await fetch(
-		`http://localhost:3000/comments?postId=${id}`
+		`${process.env.NEXT_PUBLIC_SITE_URL}/comments?postId=${id}`
 	);
 	const comments = await commentsResponse.json();
 
