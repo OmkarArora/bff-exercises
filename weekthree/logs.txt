@@ -1,0 +1,346 @@
+====CREATE TABLE====
+postgres=# create table Users (
+postgres(# create_date date,
+postgres(# user_handle uuid
+postgres(# , last_name text,
+postgres(# first_name text
+postgres(# );
+CREATE TABLE
+postgres=# select * from Users
+postgres-# \dt;
+       List of relations
+ Schema | Name  | Type  | Owner 
+--------+-------+-------+-------
+ public | users | table | omkar
+(1 row)
+
+- postgres is case insensitive
+postgres-# \d users
+                Table "public.users"
+   Column    | Type | Collation | Nullable | Default 
+-------------+------+-----------+----------+---------
+ create_date | date |           |          | 
+ user_handle | uuid |           |          | 
+ last_name   | text |           |          | 
+ first_name  | text |           |          | 
+
+====INSERT====
+postgres=# insert into users (create_date, user_handle, last_name, first_name) values ('2018-06-06', '8e6e310a-3345-11ee-be56-0242ac120002', 'akash', 'dani');
+INSERT 0 1
+
+postgres=# insert into users values ('2020-02-11', '6ca96cb6-eda0-4561-88d7-987539a1f950', 'arora', 'omkar')
+;
+INSERT 0 1
+postgres=# insert into users values ('2019-01-13');
+INSERT 0 1
+postgres=# select * from users;
+ create_date |             user_handle              | last_name | first_name 
+-------------+--------------------------------------+-----------+------------
+ 2018-06-06  | 8e6e310a-3345-11ee-be56-0242ac120002 | akash     | dani
+ 2020-02-11  | 6ca96cb6-eda0-4561-88d7-987539a1f950 | arora     | omkar
+ 2019-01-13  |                                      |           | 
+(3 rows)
+
+postgres=# 
+
+postgres=# select first_name, last_name from users
+postgres-# ;
+ first_name | last_name 
+------------+-----------
+ dani       | akash
+ omkar      | arora
+            | 
+(3 rows)
+
+postgres=# select first_name as firstname, last_name as lastName from users;
+ firstname | lastname 
+-----------+----------
+ dani      | akash
+ omkar     | arora
+           | 
+(3 rows)
+
+postgres=# select count(*) from user;
+ count 
+-------
+     1
+(1 row)
+
+== DISTINCT
+postgres=# select distinct(user_handle) from users;
+             user_handle              
+--------------------------------------
+ 
+ 6ca96cb6-eda0-4561-88d7-987539a1f950
+ 8e6e310a-3345-11ee-be56-0242ac120002
+(3 rows)
+
+== COUNT DISTINCT, empty rows are not counted in COUNT
+postgres=# select count(distinct(user_handle)) from users;
+ count 
+-------
+     2
+(1 row)
+
+==== Add EXTENSION
+postgres=# create extension "uuid-ossp";
+CREATE EXTENSION
+
+
+postgres=# select * from users;
+ create_date |             user_handle              | last_name | first_name 
+-------------+--------------------------------------+-----------+------------
+ 2018-06-06  | 8e6e310a-3345-11ee-be56-0242ac120002 | akash     | dani
+ 2020-02-11  | 6ca96cb6-eda0-4561-88d7-987539a1f950 | arora     | omkar
+ 2019-01-13  |                                      |           | 
+(3 rows)
+
+postgres=# update users set user_handle = 'sample-uuid';
+ERROR:  invalid input syntax for type uuid: "sample-uuid"
+LINE 1: update users set user_handle = 'sample-uuid';
+                                       ^
+postgres=# update users set user_handle = uuid_generate_v4()
+postgres-# ;
+UPDATE 3
+postgres=# select * from users;
+ create_date |             user_handle              | last_name | first_name 
+-------------+--------------------------------------+-----------+------------
+ 2018-06-06  | 3b9f431a-686d-4688-b5e8-5cdb11686589 | akash     | dani
+ 2020-02-11  | fe48667c-ff28-414d-92b2-c590d995e3be | arora     | omkar
+ 2019-01-13  | ba3bae3e-c8da-4a6f-9f45-32fadf985559 |           | 
+(3 rows)
+
+=== WHERE CLAUSE ===
+postgres=# update users set first_name = 'john' where user_handle='ba3bae3e-c8da-4a6f-9f45-32fadf985559';
+UPDATE 1
+postgres=# select * from users;
+ create_date |             user_handle              | last_name | first_name 
+-------------+--------------------------------------+-----------+------------
+ 2018-06-06  | 3b9f431a-686d-4688-b5e8-5cdb11686589 | akash     | dani
+ 2020-02-11  | fe48667c-ff28-414d-92b2-c590d995e3be | arora     | omkar
+ 2019-01-13  | ba3bae3e-c8da-4a6f-9f45-32fadf985559 |           | john
+(3 rows)
+
+postgres=# update users set last_name = 'george', create_date=now() where first_name='john';
+UPDATE 1
+postgres=# select * from users;
+ create_date |             user_handle              | last_name | first_name 
+-------------+--------------------------------------+-----------+------------
+ 2018-06-06  | 3b9f431a-686d-4688-b5e8-5cdb11686589 | akash     | dani
+ 2020-02-11  | fe48667c-ff28-414d-92b2-c590d995e3be | arora     | omkar
+ 2023-08-05  | ba3bae3e-c8da-4a6f-9f45-32fadf985559 | george    | john
+(3 rows)
+
+postgres=# delete from users where last_name = 'same' or first_name = 'dani';
+DELETE 1
+postgres=# select * from users;
+ create_date |             user_handle              | last_name | first_name 
+-------------+--------------------------------------+-----------+------------
+ 2023-08-05  | ba3bae3e-c8da-4a6f-9f45-32fadf985559 | george    | john
+ 2023-08-05  | 7c91120f-26a0-42e4-b73f-88a2e5fa8674 | sam       | falcon
+(2 rows)
+
+postgres=# truncate usersl
+postgres-# ;
+ERROR:  relation "usersl" does not exist
+postgres=# truncate users;
+TRUNCATE TABLE
+postgres=# select * from users;
+ create_date | user_handle | last_name | first_name 
+-------------+-------------+-----------+------------
+(0 rows)
+
+postgres=# drop table users;
+DROP TABLE
+postgres=# select * from users;
+ERROR:  relation "users" does not exist
+LINE 1: select * from users;
+
+==== CONSTRAINTS
+postgres=# create table users (
+postgres(# create_date date,
+postgres(# user_handle uuid,
+postgres(# last_name text,
+postgres(# first_name text,
+postgres(# constraint pk_users primary key (user_handle)
+postgres(# );
+CREATE TABLE
+postgres=# \d users;
+                Table "public.users"
+   Column    | Type | Collation | Nullable | Default 
+-------------+------+-----------+----------+---------
+ create_date | date |           |          | 
+ user_handle | uuid |           | not null | 
+ last_name   | text |           |          | 
+ first_name  | text |           |          | 
+Indexes:
+    "pk_users" PRIMARY KEY, btree (user_handle)
+
+postgres=# insert into users values (now(), '6ca96cb6-eda0-4561-88d7-987539a1f950', 'a','b');
+INSERT 0 1
+postgres=# insert into users values (now(), '6ca96cb6-eda0-4561-88d7-987539a1f950', 'a','b');
+ERROR:  duplicate key value violates unique constraint "pk_users"
+DETAIL:  Key (user_handle)=(6ca96cb6-eda0-4561-88d7-987539a1f950) already exists.
+
+postgres=# alter table users drop constraint pk_users;
+ALTER TABLE
+postgres=# \d users
+                Table "public.users"
+   Column    | Type | Collation | Nullable | Default 
+-------------+------+-----------+----------+---------
+ create_date | date |           |          | 
+ user_handle | uuid |           | not null | 
+ last_name   | text |           |          | 
+ first_name  | text |           |          | 
+
+postgres=# alter table users add constraint pk_users primary key (user_handle);
+ALTER TABLE
+postgres=# \d users
+                Table "public.users"
+   Column    | Type | Collation | Nullable | Default 
+-------------+------+-----------+----------+---------
+ create_date | date |           |          | 
+ user_handle | uuid |           | not null | 
+ last_name   | text |           |          | 
+ first_name  | text |           |          | 
+Indexes:
+    "pk_users" PRIMARY KEY, btree (user_handle)
+
+postgres=# alter table users alter column last_name set not null;
+ALTER TABLE
+postgres=# \d users;
+                Table "public.users"
+   Column    | Type | Collation | Nullable | Default 
+-------------+------+-----------+----------+---------
+ create_date | date |           |          | 
+ user_handle | uuid |           | not null | 
+ last_name   | text |           | not null | 
+ first_name  | text |           |          | 
+Indexes:
+    "pk_users" PRIMARY KEY, btree (user_handle)
+
+postgres=# alter table users alter column create_date set default now();
+ALTER TABLE
+postgres=# \d users;
+                Table "public.users"
+   Column    | Type | Collation | Nullable | Default 
+-------------+------+-----------+----------+---------
+ create_date | date |           |          | now()
+ user_handle | uuid |           | not null | 
+ last_name   | text |           | not null | 
+ first_name  | text |           |          | 
+Indexes:
+    "pk_users" PRIMARY KEY, btree (user_handle)
+
+postgres=# insert into users (user_handle, last_name, first_name) values (uuid_generate_v4(), 'asd', 'ddf');
+INSERT 0 1
+postgres=# select * from users;
+ create_date |             user_handle              | last_name | first_name 
+-------------+--------------------------------------+-----------+------------
+ 2023-08-05  | 6ca96cb6-eda0-4561-88d7-987539a1f950 | a         | b
+ 2023-08-05  | 35a53f9d-2be0-424b-9ce1-d8ebdeb9ba7c | asd       | ddf
+(2 rows)
+
+postgres=# insert into users values (null, uuid_generate_v4(), 'asd', 'ddf');
+INSERT 0 1
+postgres=# select * from users;
+ create_date |             user_handle              | last_name | first_name 
+-------------+--------------------------------------+-----------+------------
+ 2023-08-05  | 6ca96cb6-eda0-4561-88d7-987539a1f950 | a         | b
+ 2023-08-05  | 35a53f9d-2be0-424b-9ce1-d8ebdeb9ba7c | asd       | ddf
+             | 236bffa5-bf30-4172-8d23-0b339af35f96 | asd       | ddf
+(3 rows)
+
+postgres=# update users set first_name='banana' where user_handle='236bffa5-bf30-4172-8d23-0b339af35f96';
+UPDATE 1
+postgres=# select * from users;
+ create_date |             user_handle              | last_name | first_name 
+-------------+--------------------------------------+-----------+------------
+ 2023-08-05  | 6ca96cb6-eda0-4561-88d7-987539a1f950 | a         | b
+ 2023-08-05  | 35a53f9d-2be0-424b-9ce1-d8ebdeb9ba7c | asd       | ddf
+             | 236bffa5-bf30-4172-8d23-0b339af35f96 | asd       | banana
+(3 rows)
+
+postgres=# alter table users add constraint uk_firstname unique(first_name);
+ALTER TABLE
+postgres=# \d users;
+                Table "public.users"
+   Column    | Type | Collation | Nullable | Default 
+-------------+------+-----------+----------+---------
+ create_date | date |           |          | now()
+ user_handle | uuid |           | not null | 
+ last_name   | text |           | not null | 
+ first_name  | text |           |          | 
+Indexes:
+    "pk_users" PRIMARY KEY, btree (user_handle)
+    "uk_firstname" UNIQUE CONSTRAINT, btree (first_name)
+
+postgres=# create table users2(
+postgres(# create_date date not null,
+postgres(# user_handle uuid primary key,
+postgres(# last_name text,
+postgres(# first_name text not null
+postgres(# );
+CREATE TABLE
+postgres=# \d users2;
+                Table "public.users2"
+   Column    | Type | Collation | Nullable | Default 
+-------------+------+-----------+----------+---------
+ create_date | date |           | not null | 
+ user_handle | uuid |           | not null | 
+ last_name   | text |           |          | 
+ first_name  | text |           | not null | 
+Indexes:
+    "users2_pkey" PRIMARY KEY, btree (user_handle)
+
+
+postgres=# insert into users2 values (now(), uuid_generate_v4(), 'niceone', 'mark');
+INSERT 0 1
+postgres=# insert into users2 values (now(), uuid_generate_v4(), 'orange', 'daniel');
+INSERT 0 1
+postgres=# insert into users2 values (now(), uuid_generate_v4(), 'apple', 'boy');
+INSERT 0 1
+postgres=# select * from users2;
+ create_date |             user_handle              | last_name | first_name 
+-------------+--------------------------------------+-----------+------------
+ 2023-08-05  | 51e46d17-f344-463a-ba17-6489455b4fe2 | niceone   | mark
+ 2023-08-05  | 8889cf98-01d8-4ad3-9a0a-1f782bd11cbc | orange    | daniel
+ 2023-08-05  | 19db5bcb-87aa-465c-84b4-7be7f3a9930c | apple     | boy
+
+ postgres=# create table purchases(
+postgres(# purchase_date date not null,
+postgres(# user_handle uuid references users2 (user_handle),
+postgres(# sku uuid not null,
+postgres(# quantity int not null
+postgres(# );
+CREATE TABLE
+postgres=# \d purchases;
+                 Table "public.purchases"
+    Column     |  Type   | Collation | Nullable | Default 
+---------------+---------+-----------+----------+---------
+ purchase_date | date    |           | not null | 
+ user_handle   | uuid    |           |          | 
+ sku           | uuid    |           | not null | 
+ quantity      | integer |           | not null | 
+Foreign-key constraints:
+    "purchases_user_handle_fkey" FOREIGN KEY (user_handle) REFERENCES users2(user_handle)
+
+postgres=# insert into purchases values(now(), uuid_generate_v4(), uuid_generate_v4(), 5);
+ERROR:  insert or update on table "purchases" violates foreign key constraint "purchases_user_handle_fkey"
+DETAIL:  Key (user_handle)=(e62f702c-a9e4-4f74-a2b7-54844d2f487a) is not present in table "users2".
+
+postgres=# select * from users2;
+ create_date |             user_handle              | last_name | first_name 
+-------------+--------------------------------------+-----------+------------
+ 2023-08-05  | 51e46d17-f344-463a-ba17-6489455b4fe2 | niceone   | mark
+ 2023-08-05  | 8889cf98-01d8-4ad3-9a0a-1f782bd11cbc | orange    | daniel
+ 2023-08-05  | 19db5bcb-87aa-465c-84b4-7be7f3a9930c | apple     | boy
+(3 rows)
+
+postgres=# insert into purchases values(now(), '19db5bcb-87aa-465c-84b4-7be7f3a9930c', uuid_generate_v4(), 5);
+INSERT 0 1
+postgres=# select * from purchases;
+ purchase_date |             user_handle              |                 sku                  | quantity 
+---------------+--------------------------------------+--------------------------------------+----------
+ 2023-08-05    | 19db5bcb-87aa-465c-84b4-7be7f3a9930c | d7affb3f-d3e1-45a7-b117-9d2a7a26b301 |        5
+(1 row)
