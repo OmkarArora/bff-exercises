@@ -1,0 +1,23 @@
+export async function GET(){
+
+    NextResponse.
+}
+
+
+students
+    /GET
+        [id]
+            /GET
+            \
+
+GET /students = Students[]
+/studets/id - Student (populate Teachers value)
+
+/stidents/id?getTeacher=true
+
+/teacher - Teacher[]
+/teacher/id - Teacher
+
+POST /students - {}
+
+GET /students?teacherId=1234 - Student[]
