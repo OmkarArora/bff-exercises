@@ -1,5 +1,18 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+GET
+/students -> Students[]
+/studets/id -> Student
+/students/id?getTeacher=true -> Student (populate Teachers value)
+/students?teacherId=1234 -> Student[]
+
+/teachers - Teacher[]
+/teachers/id - Teacher
+
+POST
+/students -> new Student
+/teachers -> new Teacher
+
 ## Getting Started
 
 First, run the development server:

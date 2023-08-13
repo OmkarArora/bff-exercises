@@ -13,7 +13,18 @@ const studentSchema = z.object({
 });
 
 export async function GET(req, res) {
-	const students = await prisma.student.findMany();
+	const { searchParams } = new URL(req.url);
+	const teacherId = searchParams.get("teacherId");
+
+	const students = teacherId
+		? await prisma.student.findMany({
+				where: {
+					teacherId: {
+						equals: Number(teacherId),
+					},
+				},
+		  })
+		: await prisma.student.findMany();
 	return NextResponse.json(students);
 }
 
@@ -21,11 +32,11 @@ export async function POST(request) {
 	try {
 		const student = studentSchema.parse(await request.json());
 
-		// prisma.student.create({
-		// 	data: {},
-		// });
+		const newStudent = await prisma.student.create({
+			data: { ...student },
+		});
 
-		return NextResponse.json([]);
+		return NextResponse.json(newStudent);
 	} catch (error) {
 		console.log(error);
 		return NextResponse.json({ error: "Invalid data" }, { status: 400 });

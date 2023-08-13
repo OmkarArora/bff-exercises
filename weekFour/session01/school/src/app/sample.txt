@@ -1,23 +1,12 @@
-export async function GET(){
+GET
+/students -> Students[]
+/studets/id -> Student
+/students/id?getTeacher=true -> Student (populate Teachers value)
+/students?teacherId=1234 -> Student[]
 
-    NextResponse.
-}
+/teachers - Teacher[]
+/teachers/id - Teacher
 
-
-students
-    /GET
-        [id]
-            /GET
-            \
-
-GET /students = Students[]
-/studets/id - Student (populate Teachers value)
-
-/stidents/id?getTeacher=true
-
-/teacher - Teacher[]
-/teacher/id - Teacher
-
-POST /students - {}
-
-GET /students?teacherId=1234 - Student[]
+POST
+/students -> new Student
+/teachers -> new Teacher
