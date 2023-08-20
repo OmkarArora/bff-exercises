@@ -1,10 +1,6 @@
-function later(delay) {
-	return new Promise(function (resolve) {
-		setTimeout(resolve, delay);
-	});
-}
-
 export default async function Page() {
-	await later(5000);
+	const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/users`);
+	const data = await res.json();
+	console.log("API data", data);
 	return <div>PAGe loaded !</div>;
 }
