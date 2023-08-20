@@ -25,6 +25,12 @@ export default function Home() {
 					<Link href={"/teachers"}>
 						<div className={styles.linkTab}>All teachers</div>
 					</Link>
+					<Link href={"/approuter/students"}>
+						<div className={styles.linkTab}>All students w/ App Router</div>
+					</Link>
+					<Link href={"/approuter/teachers"}>
+						<div className={styles.linkTab}>All teachers w/ App Router</div>
+					</Link>
 				</div>
 			</main>
 		</>
