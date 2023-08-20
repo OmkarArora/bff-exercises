@@ -31,6 +31,11 @@ export default function Home() {
 					<Link href={"/approuter/teachers"}>
 						<div className={styles.linkTab}>All teachers w/ App Router</div>
 					</Link>
+					<Link href={"/approuter/students-with-long-load"}>
+						<div className={styles.linkTab}>
+							All students w/ App Router (Long Loading)
+						</div>
+					</Link>
 				</div>
 			</main>
 		</>
