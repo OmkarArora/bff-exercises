@@ -16,7 +16,8 @@ export async function POST(req) {
 	if (requestedAdmin) {
 		const isPasswordValid = await compare(requestedAdmin.password, password);
 
-		if (isPasswordValid) {
+		// to avoid truthy, falsy JS values
+		if (isPasswordValid === true) {
 			return NextResponse.json(
 				{
 					message: "User logged in",
