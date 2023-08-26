@@ -19,6 +19,11 @@ export default function Home() {
 				<h1 className={styles.heading}>School</h1>
 
 				<div className={styles.allLinks}>
+					<Link href={"/admin/login"}>
+						<div className="p-2 bg-slate-50 w-[max-content] rounded-xl text-slate-950">
+							Admin Login
+						</div>
+					</Link>
 					<Link href={"/students"}>
 						<div className={styles.linkTab}>All students</div>
 					</Link>
