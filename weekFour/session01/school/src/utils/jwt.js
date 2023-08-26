@@ -1,18 +1,23 @@
 const jwt = require("jsonwebtoken");
 
-const jwtSecret = "2kANSw0i12##4knsas";
+const jwtSecret = process.env.JWT_SECRET;
 
-const token = jwt.sign(
-	{
-		foo: "bar",
-		exp: Math.floor(Date.now() / 1000) + 60 * 60,
-		accessLevel: "admin",
-		user: "admin@test.com",
-	},
-	jwtSecret
-);
+export function sign(payload) {
+	// 1 hr expiry
+	return jwt.sign(
+		{
+			exp: Math.floor(Date.now() / 1000) + 60 * 60,
+			...payload,
+		},
+		jwtSecret
+	);
+}
 
-console.log({ token });
-
-const isVerified = jwt.verify(token, jwtSecret);
-console.log({ isVerified });
+export function verify(token) {
+	try {
+		return jwt.verify(token, jwtSecret);
+	} catch (err) {
+		console.error(err);
+		return false;
+	}
+}
