@@ -17,7 +17,6 @@ export function verify(token) {
 	try {
 		return jwt.verify(token, jwtSecret);
 	} catch (err) {
-		console.error(err);
 		return false;
 	}
 }
