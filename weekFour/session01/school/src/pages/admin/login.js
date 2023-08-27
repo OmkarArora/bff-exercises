@@ -1,19 +1,9 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-
 import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import Router from "next/router";
 
 export default function Login() {
 	const [email, setEmail] = useState("admin@test.com");
@@ -25,12 +15,19 @@ export default function Login() {
 			return;
 		}
 		let data = { email, password };
-		const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/admin`, {
-			body: JSON.stringify(data),
-			method: "POST",
-		});
-		const json = await res.json();
-		console.log(json);
+		try {
+			const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/admin`, {
+				body: JSON.stringify(data),
+				method: "POST",
+			});
+			const json = await res.json();
+			if (json.message === "User logged in") {
+				Router.replace("/teachers");
+			}
+			console.log(json);
+		} catch (err) {
+			console.error(err);
+		}
 	}
 
 	return (

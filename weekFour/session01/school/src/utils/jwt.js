@@ -1,22 +1,30 @@
-const jwt = require("jsonwebtoken");
+import * as jose from "jose";
 
-const jwtSecret = process.env.JWT_SECRET;
+const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
-export function sign(payload) {
-	// 1 hr expiry
-	return jwt.sign(
-		{
-			exp: Math.floor(Date.now() / 1000) + 60 * 60,
-			...payload,
-		},
-		jwtSecret
-	);
-}
+export const sign = async (payload) => {
+	const alg = "HS256";
 
-export function verify(token) {
+	const jwt = await new jose.SignJWT(payload)
+		.setProtectedHeader({ alg })
+		.setIssuedAt()
+		.setIssuer("urn:example:issuer")
+		.setAudience("urn:example:audience")
+		.setExpirationTime("1h")
+		.sign(secret);
+
+	return jwt;
+};
+
+export const verify = async (token) => {
 	try {
-		return jwt.verify(token, jwtSecret);
-	} catch (err) {
+		const data = await jose.jwtVerify(token, secret, {
+			issuer: "urn:example:issuer",
+			audience: "urn:example:audience",
+		});
+		return data;
+	} catch (e) {
+		console.error(e);
 		return false;
 	}
-}
+};

@@ -14,16 +14,13 @@ const teacherSchema = z.object({
 });
 
 export async function GET() {
-	console.log("HELo??");
-	const cookieStore = cookies();
-	console.log(cookieStore.getAll());
-	console.log("TOKEN======", cookieStore.get({ name: "token" }));
+	// const cookieStore = cookies();
 
-	const token = verify(cookieStore.get({ name: "token" })?.value);
+	// const token = await verify(cookieStore.get({ name: "token" })?.value);
 
-	if (!token || token.accessLevel !== "admin") {
-		return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-	}
+	// if (!token || token.accessLevel !== "admin") {
+	// 	return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+	// }
 
 	const teachers = await prisma.teacher.findMany({
 		include: {
